@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Product } from '../types/product'; // Certifique-se de que isso está correto
+import { Product } from '../types/product'; 
 import { getProducts, deleteProduct } from '../api/fakeStoreApi';
 
 const ProductList: React.FC = () => {

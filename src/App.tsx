@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home/index';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import AdicionarProduto from './pages/Cadastro/index'; // Importe a página de adicionar produto
+import AdicionarProduto from './pages/Cadastro/index'; 
 
 const App: React.FC = () => {
   return (
