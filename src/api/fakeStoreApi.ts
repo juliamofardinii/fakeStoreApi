@@ -1,28 +1,26 @@
+// src/api/fakeStoreApi.ts
 import axios from 'axios';
 import { Product } from '../types/product';
 
-const BASE_URL = 'https://fakestoreapi.com';
+const api = axios.create({
+  baseURL: 'https://fakestoreapi.com', // URL base da API
+});
 
-// Função para buscar produtos
-export const getProducts = async (): Promise<{ data: Product[] }> => {
-  try {
-    const response = await axios.get<Product[]>(`${BASE_URL}/products?limit=100`);
-    return { data: response.data }; // Retornando como um objeto com a propriedade 'data'
-  } catch (error) {
-    throw new Error('Erro ao buscar produtos');
-  }
-};
+// Função para obter todos os produtos
+export const getProducts = () => api.get('/products?limit=100');
 
-// Outras funções
-export const postProduct = async (product: Omit<Product, 'id'>) => {
-  return await axios.post(`${BASE_URL}/products`, product);
-};
+// Função para obter um produto pelo ID
+export const getProductById = (id: number): Promise<Product> =>
+  api.get(`/products/${id}`).then(response => response.data);
 
-export const updateProduct = async (id: number, product: Partial<Product>) => {
-  return await axios.put(`${BASE_URL}/products/${id}`, product);
-};
+// Função para adicionar um novo produto
+export const postProduct = (product: Omit<Product, 'id'>) => api.post('/products', product);
 
-export const deleteProduct = async (id: number) => {
-  return await axios.delete(`${BASE_URL}/products/${id}`);
-};
+// Função para atualizar um produto existente
+export const updateProduct = (id: number, product: Partial<Product>) => api.put(`/products/${id}`, product);
+
+// Função para excluir um produto
+export const deleteProduct = (id: number) => api.delete(`/products/${id}`);
+
+
 

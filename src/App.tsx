@@ -1,10 +1,11 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home/index';
+import Home from './pages/Home';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import AdicionarProduto from './pages/Cadastro/index'; 
+import AdicionarProduto from './pages/Cadastro';
+import DetalhesProduto from './pages/Detalhes'; 
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/adicionar-produto" element={<AdicionarProduto />} />
+            <Route path="/produto/:id" element={<DetalhesProduto />} />
           </Routes>
         </div>
         <Footer />
@@ -24,7 +26,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
-

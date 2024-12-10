@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductForm from '../../components/ProductForm';
+import ProductForm from '../../components/CadastroProduto/ProductForm';
 
 const Cadastro: React.FC = () => {
     return (
