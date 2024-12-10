@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import AdicionarProduto from './pages/Cadastro';
-import DetalhesProduto from './pages/Detalhes'; 
+import DetalhesProduto from './pages/Detalhes';
 
 const App: React.FC = () => {
   return (

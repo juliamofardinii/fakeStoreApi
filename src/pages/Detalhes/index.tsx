@@ -1,8 +1,7 @@
-// src/pages/Detalhes/index.tsx
 import React from 'react';
 import ProductDetails from '../../components/ProductDetails';
 
-const Detalhes: React.FC = () => {
+const DetalhesProduto: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <ProductDetails />
@@ -10,5 +9,5 @@ const Detalhes: React.FC = () => {
   );
 };
 
-export default Detalhes;
+export default DetalhesProduto;
 

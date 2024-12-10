@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductForm from '../../components/CadastroProduto/ProductForm';
 
-const Cadastro: React.FC = () => {
+const AdicionarProduto: React.FC = () => {
     return (
       <div className="container mx-auto p-4">
         <ProductForm />
@@ -9,7 +9,7 @@ const Cadastro: React.FC = () => {
     );
   };
   
-  export default Cadastro; 
+  export default AdicionarProduto; 
 
 
 
