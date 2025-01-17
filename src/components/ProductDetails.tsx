@@ -45,9 +45,6 @@ const ProductDetails: React.FC = () => {
             <button className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">
               Deletar
             </button>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
-              Ver Detalhes
-            </button>
           </div>
         </div>
       </div>
