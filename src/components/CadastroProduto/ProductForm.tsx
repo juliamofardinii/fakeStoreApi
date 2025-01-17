@@ -17,31 +17,37 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // Definindo o objeto do produto
     const product = { title, price, description, image: '', category: 'electronics' };
-
+  
+    // Log para inspecionar os dados antes do envio
+    console.log('Dados do produto:', product);
+  
     try {
       // Se existe um produto para editar
       if (existingProduct) {
+        console.log('Atualizando produto com ID:', existingProduct.id); // Log do ID do produto
         await updateProduct(existingProduct.id, product);
       } else {
         // Se não, cria um novo produto
+        console.log('Criando novo produto');
         await postProduct(product);
       }
-
+  
       // Limpar os campos do formulário após o envio
       setTitle('');
       setPrice(0);
       setDescription('');
-
+  
+      // Exibindo um alerta dependendo se está criando ou atualizando
       alert(existingProduct ? 'Produto atualizado com sucesso!' : 'Produto adicionado com sucesso!');
     } catch (error) {
       console.error('Erro ao enviar o produto:', error);
       alert('Erro ao enviar o produto.');
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <InputText
