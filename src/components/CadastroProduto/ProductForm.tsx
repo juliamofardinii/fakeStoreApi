@@ -1,53 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputText from './InputText'; // Importar os novos componentes
 import InputNumber from './InputNumber';
 import TextArea from './TextArea';
-import { Product } from '../../types/product'; 
-import { postProduct, updateProduct } from '../../api/fakeStoreApi';
+import { Product } from '../../types/product';
 
 interface ProductFormProps {
-  existingProduct?: Product; // editar produto existente
+  existingProduct?: Product;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
-  // Estado para os campos do formulário
-  const [title, setTitle] = useState(existingProduct?.title || '');
-  const [price, setPrice] = useState(existingProduct?.price || 0);
-  const [description, setDescription] = useState(existingProduct?.description || '');
+  const [title, setTitle] = useState<string>(() => localStorage.getItem('title') || existingProduct?.title || '');
+  const [price, setPrice] = useState<number>(() => Number(localStorage.getItem('price')) || existingProduct?.price || 0);
+  const [description, setDescription] = useState<string>(() => localStorage.getItem('description') || existingProduct?.description || '');
+  const [image, setImage] = useState<string>(existingProduct?.image || 'default-image-url');
+  const [category, setCategory] = useState<string>(existingProduct?.category || 'general');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    // Definindo o objeto do produto
-    const product = { title, price, description, image: '', category: 'electronics' };
-  
-    // Log para inspecionar os dados antes do envio
-    console.log('Dados do produto:', product);
-  
-    try {
-      // Se existe um produto para editar
-      if (existingProduct) {
-        console.log('Atualizando produto com ID:', existingProduct.id); // Log do ID do produto
-        await updateProduct(existingProduct.id, product);
-      } else {
-        // Se não, cria um novo produto
-        console.log('Criando novo produto');
-        await postProduct(product);
-      }
-  
-      // Limpar os campos do formulário após o envio
-      setTitle('');
-      setPrice(0);
-      setDescription('');
-  
-      // Exibindo um alerta dependendo se está criando ou atualizando
-      alert(existingProduct ? 'Produto atualizado com sucesso!' : 'Produto adicionado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao enviar o produto:', error);
-      alert('Erro ao enviar o produto.');
-    }
+  // Função para recuperar os produtos do localStorage e garantir que seja um array
+  const getProductsFromStorage = () => {
+    const products = localStorage.getItem('products');
+    return products ? JSON.parse(products) : [];
   };
-  
+
+  // Função de envio do formulário
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Cria um objeto de produto
+    const newProduct: Product = {
+      title,
+      price,
+      description,
+      image,
+      category,
+      id: new Date().getTime(), // Gera um ID único baseado no timestamp
+    };
+
+    // Recupera os produtos existentes no localStorage
+    const existingProducts = getProductsFromStorage();
+
+    // Adiciona o novo produto à lista
+    const updatedProducts = [...existingProducts, newProduct];
+
+    // Armazena a lista de produtos de volta no localStorage
+    localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+    alert('Produto adicionado com sucesso!');
+
+    // Limpar o formulário e localStorage
+    setTitle('');
+    setPrice(0);
+    setDescription('');
+    setImage('default-image-url');
+    setCategory('general');
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <InputText
@@ -65,11 +71,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
         onChange={setDescription}
         placeholder="Descrição"
       />
+      <InputText
+        value={image}
+        onChange={setImage}
+        placeholder="URL da Imagem"
+      />
+      <InputText
+        value={category}
+        onChange={setCategory}
+        placeholder="Categoria"
+      />
       <button
         type="submit"
         className="btn p-4 rounded-lg bg-blue-500 text-white w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        {existingProduct ? 'Atualizar Produto' : 'Adicionar Produto'}
+        Adicionar Produto
       </button>
     </form>
   );
