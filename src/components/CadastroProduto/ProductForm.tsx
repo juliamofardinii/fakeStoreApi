@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import InputText from './InputText'; // Importar os novos componentes
 import InputNumber from './InputNumber';
 import TextArea from './TextArea';
@@ -47,11 +47,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
     alert('Produto adicionado com sucesso!');
 
     // Limpar o formulário e localStorage
-    setTitle('');
+    /*setTitle('');
     setPrice(0);
     setDescription('');
     setImage('default-image-url');
-    setCategory('general');
+    setCategory('general');*/
   };
 
   return (
