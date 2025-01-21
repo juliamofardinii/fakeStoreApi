@@ -13,7 +13,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
   const [price, setPrice] = useState<number>(() => Number(localStorage.getItem('price')) || existingProduct?.price || 0);
   const [description, setDescription] = useState<string>(() => localStorage.getItem('description') || existingProduct?.description || '');
   const [image, setImage] = useState<string>(existingProduct?.image || 'default-image-url');
-  const [category, setCategory] = useState<string>(existingProduct?.category || 'general');
 
   // Função para recuperar os produtos do localStorage e garantir que seja um array
   const getProductsFromStorage = () => {
@@ -31,7 +30,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
       price,
       description,
       image,
-      category,
       id: new Date().getTime(), // Gera um ID único baseado no timestamp
     };
 
@@ -75,11 +73,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
         value={image}
         onChange={setImage}
         placeholder="URL da Imagem"
-      />
-      <InputText
-        value={category}
-        onChange={setCategory}
-        placeholder="Categoria"
       />
       <button
         type="submit"

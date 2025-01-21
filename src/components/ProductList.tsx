@@ -32,7 +32,7 @@ const ProductList: React.FC = () => {
           <img
             src={product.image}
             alt={product.title}
-            className="w-32 h-32 object-cover mb-4 rounded-md"
+            className="w-35 h-32 object-cover mb-4 rounded-md"
           />
           {/* Título do produto */}
           <h3 className="text-lg font-bold mb-4 text-center">{product.title}</h3>
