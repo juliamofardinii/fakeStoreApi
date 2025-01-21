@@ -12,7 +12,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
   const [title, setTitle] = useState<string>(() => localStorage.getItem('title') || existingProduct?.title || '');
   const [price, setPrice] = useState<number>(() => Number(localStorage.getItem('price')) || existingProduct?.price || 0);
   const [description, setDescription] = useState<string>(() => localStorage.getItem('description') || existingProduct?.description || '');
-  const [image, setImage] = useState<string>(existingProduct?.image || 'default-image-url');
+  const [image, setImage] = useState<string>(existingProduct?.image || '');
 
   // Função para recuperar os produtos do localStorage e garantir que seja um array
   const getProductsFromStorage = () => {
@@ -44,12 +44,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 
     alert('Produto adicionado com sucesso!');
 
-    // Limpar o formulário e localStorage
-    /*setTitle('');
+    //Limpar o formulário e localStorage
+    setTitle('');
     setPrice(0);
     setDescription('');
-    setImage('default-image-url');
-    setCategory('general');*/
+    setImage('');
   };
 
   return (
