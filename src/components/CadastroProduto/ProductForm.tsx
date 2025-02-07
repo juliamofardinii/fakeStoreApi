@@ -17,7 +17,7 @@ const createProductFormSchema = z.object({
     .min(1, "A quantidade deve ser pelo menos 1"), 
 
   productDescription: z.string()
-    .nonempty("A descrição é obrigatória") // Garante que não seja vazia
+    .nonempty("A descrição é obrigatoria") // Garante que não seja vazia
 });
 
 type CreateProductFormData = z.infer<typeof createProductFormSchema>; //Cria um tipo de dados chamado CreateProductFormData baseado no esquema de validação createProductFormSchema.
