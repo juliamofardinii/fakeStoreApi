@@ -1,86 +1,93 @@
-import React, { useState} from 'react';
-import InputText from './InputText'; // Importar os novos componentes
-import InputNumber from './InputNumber';
-import TextArea from './TextArea';
-import { Product } from '../../types/product';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface ProductFormProps {
-  existingProduct?: Product;
-}
+const createProductFormSchema = z.object({
+  productName: z.string()
+    .nonempty('O nome do produto é obrigatório')
+    .transform(name => {
+      return name
+        .split(' ') // Divide a string em palavras
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitaliza cada palavra
+        .join(' '); // Junta as palavras de volta
+    }),
 
-const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
-  const [title, setTitle] = useState<string>(() => localStorage.getItem('title') || existingProduct?.title || '');
-  const [price, setPrice] = useState<number>(() => Number(localStorage.getItem('price')) || existingProduct?.price || 0);
-  const [description, setDescription] = useState<string>(() => localStorage.getItem('description') || existingProduct?.description || '');
-  const [image, setImage] = useState<string>(existingProduct?.image || '');
+  productQuantity: z.coerce.number()
+    .min(1, "A quantidade deve ser pelo menos 1"), 
 
-  // Função para recuperar os produtos do localStorage e garantir que seja um array
-  const getProductsFromStorage = () => {
-    const products = localStorage.getItem('products');
-    return products ? JSON.parse(products) : [];
-  };
+  productDescription: z.string()
+    .nonempty("A descrição é obrigatória") // Garante que não seja vazia
+});
 
-  // Função de envio do formulário
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+type CreateProductFormData = z.infer<typeof createProductFormSchema>; //Cria um tipo de dados chamado CreateProductFormData baseado no esquema de validação createProductFormSchema.
 
-    // Cria um objeto de produto
-    const newProduct: Product = {
-      title,
-      price,
-      description,
-      image,
-      id: new Date().getTime(), // Gera um ID único baseado no timestamp
-    };
+export default function ProductForm() {
+  const [products, setProducts] = useState<CreateProductFormData[]>([]);
 
-    // Recupera os produtos existentes no localStorage
-    const existingProducts = getProductsFromStorage();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<CreateProductFormData>({
+    resolver: zodResolver(createProductFormSchema)
+  });
 
-    // Adiciona o novo produto à lista
-    const updatedProducts = [...existingProducts, newProduct];
+  // Função para buscar produtos do localStorage  ------
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("products");
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+    }
+  }, []);
 
-    // Armazena a lista de produtos de volta no localStorage
-    localStorage.setItem('products', JSON.stringify(updatedProducts));
+  function createProduct(data: CreateProductFormData) {
+    // Recuperar os produtos existentes do localStorage
+    const existingProducts = JSON.parse(localStorage.getItem("products") || "[]");
 
-    alert('Produto adicionado com sucesso!');
+    // Adicionar o novo produto à lista
+    const updatedProducts = [...existingProducts, data];
 
-    //Limpar o formulário e localStorage
-    setTitle('');
-    setPrice(0);
-    setDescription('');
-    setImage('');
-  };
+    // Armazenar a lista de produtos no localStorage
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+    // Atualizar o estado para refletir na interface
+    setProducts(updatedProducts);
+
+    alert("Produto adicionado com sucesso!");
+
+    // Resetar o formulário
+    reset();
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <InputText
-        value={title}
-        onChange={setTitle}
-        placeholder="Título"
-      />
-      <InputNumber
-        value={price}
-        onChange={setPrice}
-        placeholder="Preço"
-      />
-      <TextArea
-        value={description}
-        onChange={setDescription}
-        placeholder="Descrição"
-      />
-      <InputText
-        value={image}
-        onChange={setImage}
-        placeholder="URL da Imagem"
-      />
-      <button
-        type="submit"
-        className="btn p-4 rounded-lg bg-blue-500 text-white w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        Adicionar Produto
-      </button>
-    </form>
-  );
-};
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Cadastro de Produto</h1>
+      
+      <form onSubmit={handleSubmit(createProduct)} className="space-y-4">
+        <div>
+          <label>Nome do Produto:</label>
+          <input {...register("productName")} className="border p-2 w-full rounded-lg" />
+          {errors.productName && <p className="text-red-500 text-left">{errors.productName.message}</p>}
+        </div>
 
-export default ProductForm;
+        <div>
+          <label>Quantidade:</label>
+          <input type="number" {...register("productQuantity")} className="border p-2 w-full rounded-lg" />
+          {errors.productQuantity && <p className="text-red-500 text-left">{errors.productQuantity.message}</p>}
+        </div>
+
+        <div>
+          <label>Descrição:</label>
+          <textarea {...register("productDescription")} className="border p-2 w-full rounded-lg" />
+          {errors.productDescription && <p className="text-red-500 text-left">{errors.productDescription.message}</p>}
+        </div>
+
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Adicionar Produto
+        </button>
+      </form>
+    </div>
+  );
+}
